@@ -253,6 +253,11 @@ static NSDictionary *MergeDictionaries(NSDictionary *recessiveDict, NSDictionary
     _callbackQueue = dispatch_get_main_queue();
     _fetcherService = [[GTMSessionFetcherService alloc] init];
 
+    // Avoid caching URL requests for security reasons. The cache is not used anyway.
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    configuration.URLCache = nil;
+    _fetcherService.configuration = configuration;
+
     // Make the session fetcher use a background delegate queue instead of bouncing
     // through the main queue for its callbacks from NSURLSession. This should improve
     // performance, and eventually be the default behavior for the fetcher.
